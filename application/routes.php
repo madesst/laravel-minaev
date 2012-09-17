@@ -90,22 +90,50 @@ Event::listen('500', function()
 |
 */
 
-Route::filter('before', function()
-{
-	// Do stuff before every request to your application...
-});
+use Minaev\Services\ImagesComparer;
 
-Route::filter('after', function($response)
+Route::post('/', array(function()
 {
-	// Do stuff after every request to your application...
-});
+	$decoded_array = json_decode(Input::get('data'));
 
-Route::filter('csrf', function()
-{
-	if (Request::forged()) return Response::error('500');
-});
+	$image_compare = new ImagesComparer($decoded_array);
+	return json_encode($image_compare->compare());
+}));
 
-Route::filter('auth', function()
+Route::get('(:num)/(:all)', array(function()
 {
-	if (Auth::guest()) return Redirect::to('login');
-});
+	$uri = URI::current();
+
+	$arithmetic_operators = array(
+		'-' => 'minus',
+		'+' => 'plus',
+		'*' => 'multiplication',
+		'/' => 'division'
+	);
+
+	$pattern = '#([0-9]+(\/('.implode('|', $arithmetic_operators).')+\/[0-9]+)+)#';
+
+	$matches = array();
+	preg_match($pattern, $uri, $matches);
+
+	if($matches && $matches[0] == $uri)
+	{
+		$search_names = array();
+		$replace_symbols = array();
+
+		foreach($arithmetic_operators as $sybmol => $operator_name)
+		{
+			$search_names[] = '/'.$operator_name.'/';
+			$replace_symbols[] = $sybmol;
+		}
+
+		$normalized = str_ireplace(
+			$search_names,
+			$replace_symbols,
+			$uri
+		);
+		return round(eval('return @('.$normalized.');'), 0, PHP_ROUND_HALF_UP);
+	}
+
+	return View::make('home.index');
+}));

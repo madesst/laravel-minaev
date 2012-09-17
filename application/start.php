@@ -78,6 +78,10 @@ Autoloader::directories(array(
 	path('app').'libraries',
 ));
 
+Autoloader::namespaces(array(
+	'Minaev' => path('app').'Minaev',
+));
+
 /*
 |--------------------------------------------------------------------------
 | Laravel View Loader
