@@ -99,7 +99,7 @@ Route::post('/', array(function()
 	if(is_array($decoded_array) && count($decoded_array) == 2)
 	{
 		$image_compare = new ImagesComparer($decoded_array);
-		return json_encode($image_compare->compare());
+		return $image_compare->compare() ? 'true' : 'false';
 	}
 
 	throw new \Exception('BAD ARGS');
@@ -114,5 +114,6 @@ Route::get('(:num)/(:all)', array(function()
 
 Route::get('json', array(function()
 {
-	return json_encode(array('http://cs411117.userapi.com/u496308/a_e8454dba.jpg', 'http://www.officerpratt.com/TyeBandCom/monsoor%20michael%20color2.jpg'));
+	return json_encode(array('veliovgroup.com/admin/uploads/smile.png',
+		'veliovgroup.com/admin/uploads/meetme_logo.png'));
 }));
