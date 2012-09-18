@@ -18,11 +18,6 @@ class ImagesComparer
 
 	public function __construct(array $images_array)
 	{
-//		if(!is_array($images_array) || !count($images_array) == 2)
-//		{
-//			throw new \Exception('NEED 2 URLs');
-//		}
-
 		$this->imagePair = new ImagePair(
 			new Image(array_pop($images_array)),
 			new Image(array_pop($images_array))
@@ -33,15 +28,13 @@ class ImagesComparer
 
 	public function compare()
 	{
-		$this->imagePair->saveFromUrl();
+		$this->imagePair->saveToDisk();
+
 		$comparer = new ImagesComparerLogic($this->imagePair->getImagesPathsArray());
 		$comparer->Compare();
 
-		foreach($this->imagePair->getImagesArray() as $image)
-		{
-			$image->deleteFile();
-		}
+		$this->imagePair->deleteFromDisk();
 
-		return $comparer->Images[0][1] >= self::MAX_DIFF ? false : true;
+		return $comparer->Images[0][1][1] >= self::MAX_DIFF ? false : true;
 	}
 }

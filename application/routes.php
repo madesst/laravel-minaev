@@ -96,44 +96,23 @@ Route::post('/', array(function()
 {
 	$decoded_array = json_decode(Input::get('data'));
 
-	$image_compare = new ImagesComparer($decoded_array);
-	return json_encode($image_compare->compare());
+	if(is_array($decoded_array) && count($decoded_array) == 2)
+	{
+		$image_compare = new ImagesComparer($decoded_array);
+		return json_encode($image_compare->compare());
+	}
+
+	throw new \Exception('BAD ARGS');
 }));
+
+use Minaev\Services\Calculator;
 
 Route::get('(:num)/(:all)', array(function()
 {
-	$uri = URI::current();
+	return \Minaev\Services\Calculator::parseAndCalculate(URI::current());
+}));
 
-	$arithmetic_operators = array(
-		'-' => 'minus',
-		'+' => 'plus',
-		'*' => 'multiplication',
-		'/' => 'division'
-	);
-
-	$pattern = '#([0-9]+(\/('.implode('|', $arithmetic_operators).')+\/[0-9]+)+)#';
-
-	$matches = array();
-	preg_match($pattern, $uri, $matches);
-
-	if($matches && $matches[0] == $uri)
-	{
-		$search_names = array();
-		$replace_symbols = array();
-
-		foreach($arithmetic_operators as $sybmol => $operator_name)
-		{
-			$search_names[] = '/'.$operator_name.'/';
-			$replace_symbols[] = $sybmol;
-		}
-
-		$normalized = str_ireplace(
-			$search_names,
-			$replace_symbols,
-			$uri
-		);
-		return round(eval('return @('.$normalized.');'), 0, PHP_ROUND_HALF_UP);
-	}
-
-	return View::make('home.index');
+Route::get('json', array(function()
+{
+	return json_encode(array('http://cs411117.userapi.com/u496308/a_e8454dba.jpg', 'http://www.officerpratt.com/TyeBandCom/monsoor%20michael%20color2.jpg'));
 }));

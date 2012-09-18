@@ -18,17 +18,25 @@ class ImagePair {
 		$this->image_right = $image_right;
 	}
 
-	public function saveFromUrl()
+	public function saveToDisk()
 	{
 		foreach($this->getImagesArray() as $image)
 		{
-			if(!$image->save())
+			if(!$image->saveToDisk())
 			{
 				return false;
 			}
 		}
 
 		return true;
+	}
+
+	public function deleteFromDisk()
+	{
+		foreach($this->getImagesArray() as $image)
+		{
+			$image->deleteFromDisk();
+		}
 	}
 
 	public function getImagesArray()
