@@ -1,5 +1,10 @@
 <?php namespace Minaev\Services;
 
+ /*
+  * Third party lib from http://habrahabr.ru/post/120577/
+  * By nikita2206
+  */
+
 class ImagesComparerLogic
 {
 
