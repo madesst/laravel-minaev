@@ -9,16 +9,17 @@
 
 class Calculator
 {
-	public static function parseAndCalculate($url)
-	{
-		$arithmetic_operators = array(
-			'-' => 'minus',
-			'+' => 'plus',
-			'*' => 'multiplication',
-			'/' => 'division'
+	public static $arithmetic_operators = array(
+			'minus' => '-',
+			'plus' => '+',
+			'multiplication' => '*',
+			'division' => '/'
 		);
 
-		$pattern = '#([0-9]+(\/('.implode('|', $arithmetic_operators).')+\/[0-9]+)+)#';
+	public static function parseAndCalculate($url)
+	{
+		//Нельзя заюзать validator_match из-за того что он не поддерживает регулярки с пайпами (|)
+		$pattern = '#([0-9]+(\/('.implode('|', array_flip(self::$arithmetic_operators)).')+\/[0-9]+)+)#i';
 
 		$matches = array();
 		preg_match($pattern, $url, $matches);
@@ -28,7 +29,7 @@ class Calculator
 			$search_names = array();
 			$replace_symbols = array();
 
-			foreach($arithmetic_operators as $sybmol => $operator_name)
+			foreach(self::$arithmetic_operators as $operator_name => $sybmol)
 			{
 				$search_names[] = '/'.$operator_name.'/';
 				$replace_symbols[] = $sybmol;

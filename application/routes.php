@@ -90,30 +90,10 @@ Event::listen('500', function()
 |
 */
 
-use Minaev\Services\ImagesComparer;
-
-Route::post('/', array(function()
-{
-	$decoded_array = json_decode(Input::get('data'));
-
-	if(is_array($decoded_array) && count($decoded_array) == 2)
-	{
-		$image_compare = new ImagesComparer($decoded_array);
-		return $image_compare->compare() ? 'true' : 'false';
-	}
-
-	throw new \Exception('BAD ARGS');
-}));
-
-use Minaev\Services\Calculator;
-
-Route::get('(:num)/(:all)', array(function()
-{
-	return \Minaev\Services\Calculator::parseAndCalculate(URI::current());
-}));
-
 Route::get('json', array(function()
 {
-	return json_encode(array('veliovgroup.com/admin/uploads/smile.png',
-		'veliovgroup.com/admin/uploads/meetme_logo.png'));
+	$class = new stdClass();
+	$class->img1 = 'veliovgroup.com/admin/uploads/smile.png';
+	$class->img2 = 'veliovgroup.com/admin/uploads/meetme_logo.png';
+	return json_encode($class);
 }));

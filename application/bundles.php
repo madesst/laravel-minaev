@@ -36,5 +36,6 @@
 return array(
 
 	'docs' => array('handles' => 'docs'),
+	'minaev' => array('auto' => true, 'handles' => 'minaev')
 
 );
